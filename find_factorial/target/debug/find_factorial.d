@@ -1,1 +1,0 @@
-/Users/adam-06-05/Desktop/piscine-rust/find_factorial/target/debug/find_factorial: /Users/adam-06-05/Desktop/piscine-rust/find_factorial/src/lib.rs /Users/adam-06-05/Desktop/piscine-rust/find_factorial/src/main.rs
