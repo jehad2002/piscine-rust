@@ -1,0 +1,1 @@
+/Users/adam-06-05/Desktop/piscine-rust/speed_transformation/target/debug/speed_transformation: /Users/adam-06-05/Desktop/piscine-rust/speed_transformation/src/lib.rs /Users/adam-06-05/Desktop/piscine-rust/speed_transformation/src/main.rs
