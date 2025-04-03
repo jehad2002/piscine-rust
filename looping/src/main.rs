@@ -7,7 +7,7 @@ fn main() {
 
     loop {
         println!("{}", riddle);
-        
+
         let mut answer = String::new();
         io::stdin().read_line(&mut answer).expect("Failed to read line");
 
@@ -17,8 +17,6 @@ fn main() {
         if answer == correct_answer {
             println!("Number of trials: {}", trials);
             break;
-        } else {
-            println!("Incorrect answer. Try again!");
         }
     }
 }
