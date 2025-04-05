@@ -1,53 +1,50 @@
 pub fn delete_and_backspace(s: &mut String) {
-    let chars: Vec<char> = s.chars().collect();
-    let mut result: Vec<char> = Vec::new();
-    let mut i = 0;
-
+    let mut chars: Vec<char> = s.chars().collect();
+    let mut i = chars.len() ;	
+	while i  > 0 {
+		i -= 1;
+        if chars[i] == '+' {
+			chars.remove(i); 
+            if i < chars.len() {
+                chars.remove(i);
+            }
+        }
+    }	
+    i = 0;
     while i < chars.len() {
-        match chars[i] {
-            '-' => {
-                // backspace: remove last character if exists
-                if !result.is_empty() {
-                    result.pop();
-                }
-                i += 1;
+        if chars[i] == '-' {
+            if i > 0 {
+                chars.remove(i - 1);
+                i -= 1;
             }
-            '+' => {
-                // delete: skip next character too
-                i += 2;
-            }
-            c => {
-                result.push(c);
-                i += 1;
-            }
+            chars.remove(i); 
+        }  else {
+            i += 1;
         }
     }
-
-    *s = result.iter().collect();
+	
+    *s = chars.into_iter().collect();
 }
-
 pub fn do_operations(v: &mut [String]) {
-    for expr in v {
-        let op = if expr.contains('+') {
-            '+'
-        } else {
-            '-'
-        };
+    for element in v.iter_mut() {
+        let operator_index = element.chars().position(|c| c == '+' || c == '-');
+        if let Some(i) = operator_index {
+            let operator = element.chars().nth(i);
+            let (left, right) = element.split_at(i);
+            let x = left.trim().parse::<i32>().expect("invalid number");
+            let y = right[1..].trim().parse::<i32>().expect("invalid number"); // skip operator itself
 
-        let parts: Vec<&str> = expr.split(op).collect();
-        if parts.len() != 2 {
-            continue;
+            if let Some(o) = operator {
+                match o {
+                    '+' => {
+                        *element = (x + y).to_string();
+                    },
+                    '-' => {
+                        *element = (x - y).to_string(); // حذف السطر اللي كان يعمل y = -y
+                    },
+                    _ => println!("{} is not a valid operator!!", o),
+                }
+            }
         }
-
-        let left: i32 = parts[0].parse().unwrap_or(0);
-        let right: i32 = parts[1].parse().unwrap_or(0);
-
-        let result = match op {
-            '+' => left + right,
-            '-' => left - right,
-            _ => 0,
-        };
-
-        *expr = result.to_string();
     }
 }
