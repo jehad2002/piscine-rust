@@ -1,14 +1,14 @@
 pub fn delete_and_backspace(s: &mut String) {
     let mut result = Vec::new();
-
     let mut chars = s.chars().peekable();
+
     while let Some(c) = chars.next() {
         match c {
             '-' => {
-                result.pop(); // backspace: remove last character
+                result.pop(); // backspace
             }
             '+' => {
-                chars.next(); // delete: skip next character
+                chars.next(); // skip next char
             }
             _ => {
                 result.push(c);
@@ -18,7 +18,6 @@ pub fn delete_and_backspace(s: &mut String) {
 
     *s = result.iter().collect();
 }
-
 
 pub fn do_operations(v: &mut [String]) {
     for expr in v {
@@ -30,7 +29,7 @@ pub fn do_operations(v: &mut [String]) {
 
         let parts: Vec<&str> = expr.split(op).collect();
         if parts.len() != 2 {
-            continue; // skip invalid expressions
+            continue;
         }
 
         let left: i32 = parts[0].parse().unwrap_or(0);
