@@ -2,8 +2,8 @@ use card_deck::*;
 
 fn main() {
     let your_card = Card {
-        rank: Rank::random(),
         suit: Suit::random(),
+        rank: Rank::random(),
     };
 
     println!("Your card is {:?}", your_card);

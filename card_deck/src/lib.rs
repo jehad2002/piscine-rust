@@ -19,8 +19,8 @@ pub enum Rank {
 
 impl Suit {
     pub fn random() -> Suit {
-        let mut random = rand::thread_rng();
-        match random.gen_range(1..=4) {
+        let mut rng = rand::thread_rng();
+        match rng.gen_range(1..=4) {
             1 => Suit::Heart,
             2 => Suit::Diamond,
             3 => Suit::Spade,
@@ -34,20 +34,20 @@ impl Suit {
             2 => Suit::Diamond,
             3 => Suit::Spade,
             4 => Suit::Club,
-            _ => panic!("Invalid suit value!"),
+            _ => panic!("invalid suit!!"),
         }
     }
 }
 
 impl Rank {
     pub fn random() -> Rank {
-        let mut random = rand::thread_rng();
-        match random.gen_range(1..=13) {
+        let mut rng = rand::thread_rng();
+        match rng.gen_range(1..=13) {
             1 => Rank::Ace,
             11 => Rank::Jack,
             12 => Rank::Queen,
             13 => Rank::King,
-            n => Rank::Number(n as u8),
+            i => Rank::Number(i as u8),
         }
     }
 
@@ -57,8 +57,8 @@ impl Rank {
             11 => Rank::Jack,
             12 => Rank::Queen,
             13 => Rank::King,
-            2..=10 => Rank::Number(value),
-            _ => panic!("Invalid rank value!"),
+            v @ 2..=10 => Rank::Number(v),
+            _ => panic!("invalid rank!!"),
         }
     }
 }
@@ -70,5 +70,8 @@ pub struct Card {
 }
 
 pub fn winner_card(card: &Card) -> bool {
-    card.suit == Suit::Spade && card.rank == Rank::Ace
+    card == &Card {
+        suit: Suit::Spade,
+        rank: Rank::Ace,
+    }
 }
