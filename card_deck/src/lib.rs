@@ -8,56 +8,49 @@ pub enum Suit {
     Club,
 }
 
-impl Suit {
-    pub fn random() -> Suit {
-        let value = rand::thread_rng().gen_range(1..=4);
-        Suit::translate(value)
-    }
-
-    pub fn translate(value: u8) -> Suit {
-        match value {
-            1 => Suit::Heart,
-            2 => Suit::Diamond,
-            3 => Suit::Spade,
-            4 => Suit::Club,
-            _ => panic!("Invalid suit value"),
-        }
-    }
-}
-
 #[derive(Debug, PartialEq)]
 pub enum Rank {
     Ace,
-    Number(u8),
-    Jack,
-    Queen,
     King,
+    Queen,
+    Jack,
+    Number(u8),
 }
 
-impl Rank {
-    pub fn random() -> Rank {
-        let value = rand::thread_rng().gen_range(1..=13);
-        Rank::translate(value)
-    }
-
-    pub fn translate(value: u8) -> Rank {
-        match value {
-            1 => Rank::Ace,
-            2..=10 => Rank::Number(value),
-            11 => Rank::Jack,
-            12 => Rank::Queen,
-            13 => Rank::King,
-            _ => panic!("Invalid rank value"),
-        }
-    }
-}
-
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub struct Card {
     pub suit: Suit,
     pub rank: Rank,
 }
 
+pub fn generate_suit() -> Suit {
+    let value = rand::thread_rng().gen_range(1..=4);
+    match value {
+        1 => Suit::Heart,
+        2 => Suit::Diamond,
+        3 => Suit::Spade,
+        _ => Suit::Club,
+    }
+}
+
+pub fn generate_rank() -> Rank {
+    let value = rand::thread_rng().gen_range(1..=13);
+    match value {
+        1 => Rank::Ace,
+        11 => Rank::Jack,
+        12 => Rank::Queen,
+        13 => Rank::King,
+        _ => Rank::Number(value),
+    }
+}
+
+pub fn generate_card() -> Card {
+    Card {
+        suit: generate_suit(),
+        rank: generate_rank(),
+    }
+}
+
 pub fn winner_card(card: &Card) -> bool {
-    card.suit == Suit::Spade && card.rank == Rank::Ace
+    matches!(card.rank, Rank::Ace) && matches!(card.suit, Suit::Spade)
 }
