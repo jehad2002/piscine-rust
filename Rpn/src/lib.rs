@@ -1,37 +1,91 @@
-pub fn rpn(s: &str) -> String {
-    let mut stacks = Vec::new();
+// fn main() {
+//     let args: Vec<String> = std::env::args().collect();
 
-    for operand in s.split_whitespace() {
-        match operand {
-            "+" | "-" | "/" | "%" => {
-                if stacks.len() < 2 { 
-                    return "Error".to_string();
-                }
+//     rpn(&args[1]);
+// }
 
-                let a = stacks.pop().unwrap_or(0);
-                let b = stacks.pop().unwrap_or(0);
-                let result = match operand {
-                    "+" => a+b,
-                    "-" => a-b,
-                    "/" => a/b,
-                    "%" => a%b,
-                    _ => todo!()
-                };
-                stacks.push(result); 
-            },
-            number => {
-                if let Ok(num) = number.parse::<i64>() {
-                    stacks.push(num);
-                } else {
-                    return "Error".to_string();
-                }
+// pub fn rpn(s: &str) {
+//     if s.is_empty() {
+//         println!("Error");
+//         return;
+//     }
+//     let mut res = Vec::new();
+//     for v in s.split_whitespace() {
+//         if let Ok(n) = v.parse::<i64>() {
+//             res.push(n);
+//         } else {
+//             if res.len() >= 2 {
+//                 let second = res.pop().unwrap();
+//                 let first = res.pop().unwrap();
+//                 match v {
+//                     "+" => res.push(first + second),
+//                     "-" => res.push(first - second),
+//                     "*" => res.push(first * second),
+//                     "/" => res.push(first / second),
+//                     "%" => res.push(first % second),
+//                     _  => {println!("Error"); return;}
+//                 };
+//             } else {
+//                 println!("Error"); 
+//                 return;
+//             }
+//         }
+//     }
+//     if res.len() > 1 {
+//         println!("Error"); 
+//         return;
+//     }
+//     println!("{}", res[0]);
+// }
+//========================================================
+pub fn rpn(expr: &str) {
+    let tokens: Vec<&str> = expr.split_whitespace().collect();
+    let mut stack: Vec<i64> = Vec::new();
+
+    for token in tokens {
+        if let Ok(num) = token.parse::<i64>() {
+            stack.push(num);
+        } else {
+            if stack.len() < 2 {
+                println!("Error");
+                return;
             }
-        }
-    };  
 
-    if stacks.len() == 1 {
-        stacks[0].to_string()
+            let b = stack.pop().unwrap();
+            let a = stack.pop().unwrap();
+
+            let result = match token {
+                "+" => a + b,
+                "-" => a - b,
+                "*" => a * b,
+                "/" => {
+                    if b == 0 {
+                        println!("Error");
+                        return;
+                    }
+                    a / b
+                }
+                "%" => {
+                    if b == 0 {
+                        println!("Error");
+                        return;
+                    }
+                    a % b
+                }
+                _ => {
+                    println!("Error");
+                    return;
+                }
+            };
+
+            stack.push(result);
+        }
+    }
+
+    if stack.len() == 1 {
+        println!("{}", stack[0]);
     } else {
-        "Error".to_string()
+        println!("Error");
     }
 }
+

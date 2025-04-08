@@ -1,19 +1,16 @@
 use std::collections::HashMap;
+use regex::Regex;
 
 pub fn counting_words(words: &str) -> HashMap<String, u32> {
-    let mut words_repeat: HashMap<String, u32> = HashMap::new();
-    
-    for word in words.split_whitespace() {
-        let mut filtered_word: String = word.chars()
-            .filter(|c| c.is_alphanumeric() || *c == '\'')
-            .map(|v| v.to_ascii_lowercase())
-            .collect();                      
-        if filtered_word.starts_with("'") {
-            filtered_word = filtered_word.chars().filter(|c| *c != '\'').collect();
-        }
-        if !filtered_word.is_empty() {
-            *words_repeat.entry(filtered_word).or_insert(0) += 1;
-        }
+    // regex يسمح بكلمات مكونة من أحرف أو أرقام + كلمات فيها apostrophe زي "I'm"
+    let re = Regex::new(r"\b[\w]+(?:'[a-zA-Z]+)?\b").unwrap();
+
+    let mut counts = HashMap::new();
+
+    for mat in re.find_iter(words) {
+        let word = mat.as_str().to_lowercase();
+        *counts.entry(word).or_insert(0) += 1;
     }
-    words_repeat
+
+    counts
 }

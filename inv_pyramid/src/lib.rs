@@ -1,18 +1,39 @@
-pub fn inv_pyramid(v: String, i: u32) -> Vec<String> {
-    if i == 0 {
-        return Vec::new();
+fn inv_pyramid(v: String, i: u32) -> Vec<String> {
+    let mut result = Vec::new();
+    
+    // الجزء العلوي من الهرم (التوسع)
+    for j in 1..=i {
+        let spaces = " ".repeat((i - j) as usize);
+        let symbols = v.repeat(j as usize);
+        result.push(format!("{}{}", spaces, symbols));
     }
 
-    let capacity = 2 * i as usize - 1;
-    let mut output = vec![String::new(); capacity];
+    // الجزء السفلي من الهرم (التقليص)
+    for j in (1..i).rev() {
+        let spaces = " ".repeat((i - j) as usize);
+        let symbols = v.repeat(j as usize);
+        result.push(format!("{}{}", spaces, symbols));
+    }
 
+    result
+}
 
-    for j in 0..i {
-        let str = format!("{}{}", " ".repeat(j as usize + 1), v.repeat(j as usize + 1));
-        output[j as usize] = str.clone();
-        if j != i - 1 {
-            output[capacity - j as usize - 1] = str.clone();
-        }
-    };
-    output
+fn main() {
+    let a = inv_pyramid(String::from("#"), 1);
+    let b = inv_pyramid(String::from("a"), 2);
+    let c = inv_pyramid(String::from(">"), 5);
+    let d = inv_pyramid(String::from("&"), 8);
+
+    for v in a.iter() {
+        println!("{:?}", v);
+    }
+    for v in b.iter() {
+        println!("{:?}", v);
+    }
+    for v in c.iter() {
+        println!("{:?}", v);
+    }
+    for v in d.iter() {
+        println!("{:?}", v);
+    }
 }
