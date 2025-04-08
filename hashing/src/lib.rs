@@ -1,33 +1,38 @@
 use std::collections::HashMap;
 
-pub fn mean(list: &Vec<i32>) -> f64 {
-    list.iter().sum::<i32>() as f64 / list.len() as f64
+pub fn mean(list: &[i32]) -> f64 {
+    let sum: i32 = list.iter().sum();
+    sum as f64 / list.len() as f64
 }
 
-pub fn median(list: &Vec<i32>) -> i32 {
-    let mut l = list.clone();
-    l.sort();
-    let mid = l.len() / 2;
-    if l.len() % 2 == 0 {
-        return (l[mid - 1] + l[mid]) / 2;
+pub fn median(list: &[i32]) -> i32 {
+    let mut sorted = list.to_vec();
+    sorted.sort();
+    let len = sorted.len();
+
+    if len % 2 == 1 {
+        sorted[len / 2]
+    } else {
+        let mid1 = sorted[len / 2 - 1];
+        let mid2 = sorted[len / 2];
+        (mid1 + mid2) / 2
     }
-    l[mid]
 }
 
-pub fn mode(list: &Vec<i32>) -> i32 {
-    let mut res = HashMap::new();
-    for l in list {
-        let count = res.entry(l).or_insert(0);
-        *count += 1
-    }
-    let mut prev = 0;
-    let mut repeated: i32 = 0;
+pub fn mode(list: &[i32]) -> i32 {
+    let mut frequency = HashMap::new();
+    let mut max_count = 0;
+    let mut mode = list[0];
 
-    for (&key, value) in res {
-        if value > prev {
-            repeated = key;
-            prev = value
+    for &value in list {
+        let count = frequency.entry(value).or_insert(0);
+        *count += 1;
+
+        if *count > max_count {
+            max_count = *count;
+            mode = value;
         }
     }
-    repeated
+
+    mode
 }
