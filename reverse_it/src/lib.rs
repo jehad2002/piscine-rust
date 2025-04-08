@@ -1,9 +1,9 @@
 // pub fn reverse_it(v: i32) -> String {
-//     let sign = if v < 0 { "-" } else { "" };
+//     let z = if v < 0 { "-" } else { "" };
 //     let binding = v.to_string();
 //     let num = binding.trim_matches(|c| c == '-');
 //     let reverse = num.to_string().chars().rev().collect::<String>();
-//     format!("{}{}{}", sign, reverse, num)
+//     format!("{}{}{}", z, reverse, num)
 // }
 
 //=====================================
@@ -11,10 +11,10 @@
 pub fn reverse_it(v: i32) -> String {
     let mut x = v;
     let mut y :i32 = 0;
-    let mut sign = 1;
+    let mut z = 1;
     if v < 0 {
-        sign = -1;
-        x *= sign;
+        z = -1;
+        x *= z;
     }
     while x != 0 {
         y *= 10;
@@ -22,6 +22,6 @@ pub fn reverse_it(v: i32) -> String {
         x /= 10;
         //println!("y = {y}, x = {x}");
     }
-    y *= sign;
+    y *= z;
     y.to_string()
 }

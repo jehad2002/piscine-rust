@@ -1,18 +1,19 @@
 Exam 01
 Level 1
-Division-and_remainder
-Matrix-transposition
+- Division-and_remainder
+- Matrix-transposition
 Level 2
-Reverse-it
-Bigger
-Capitalizing
+- Reverse-it
+- Bigger
+- Capitalizing
 Level 3
-Counting-words
-Partials-sums
-Inv-pyramid
+- Counting-words
+- Partials-sums
+- Inv-pyramid
 Level 4
-Insertion-sorted
-Rpn
+- Insertion-sorted
+- Rpn
+
 Exam 02
 Level 1
 Previousprime
