@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-pub fn word_frequency_counter(words: &[&str]) -> HashMap<&str, usize> {
+pub fn word_frequency_counter<'a>(words: &'a [&'a str]) -> HashMap<&'a str, usize> {
     let mut frequency_count = HashMap::new();
     
     for &word in words {
