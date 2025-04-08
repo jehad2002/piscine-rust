@@ -6,12 +6,24 @@ pub fn capitalize_first(input: &str) -> String {
 }
 
 pub fn title_case(input: &str) -> String {
-    input
-        .split_whitespace()
-        .map(capitalize_first)
-        .collect::<Vec<String>>()
-        .join(" ")
+    let mut result = String::new();
+    let mut capitalize = true;
+
+    for c in input.chars() {
+        if c.is_whitespace() {
+            capitalize = true;
+            result.push(c);
+        } else if capitalize {
+            result.extend(c.to_uppercase());
+            capitalize = false;
+        } else {
+            result.push(c);
+        }
+    }
+
+    result
 }
+
 
 pub fn change_case(input: &str) -> String {
     input
