@@ -1,18 +1,14 @@
 use std::fs::OpenOptions;
 use std::io::Write;
+use std::path::Path;
 
-pub fn open_or_create(file: &str, content: &str) {
-    let mut file_handle = match OpenOptions::new()
-        .read(true)
-        .write(true)
+pub fn open_or_create<P: AsRef<Path>>(path: P, content: &str) {
+    let mut file = OpenOptions::new()
         .create(true)
-        .open(file)
-    {
-        Ok(file) => file,
-        Err(err) => panic!("{}", err),
-    };
+        .append(true)
+        .open(path)
+        .expect("Failed to open or create file");
 
-    if let Err(err) = file_handle.write_all(content.as_bytes()) {
-        panic!("{}", err);
-    }
+    file.write_all(content.as_bytes())
+        .expect("Failed to write to file");
 }
