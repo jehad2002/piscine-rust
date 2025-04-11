@@ -7,10 +7,10 @@ pub struct Flag {
 }
 
 impl Flag {
-    pub fn opt_flag(short_hand: &str, desc: &str) -> Self {
-        Flag {
-            short_hand: format!("-{}", short_hand),
-            long_hand: format!("--{}", short_hand),
+    pub fn opt_flag(name: &str, desc: &str) -> Self {
+        Self {
+            short_hand: format!("-{}", &name.chars().next().unwrap()),
+            long_hand: format!("--{}", name),
             desc: desc.to_string(),
         }
     }
@@ -28,15 +28,14 @@ impl FlagsHandler {
         self.flags.insert(flag.long_hand.clone(), func);
     }
 
-    pub fn exec_func(&self, flag: &str, argv: &[&str]) -> Result<String, String> {
-        if let Some(func) = self.flags.get(flag) {
-            if argv.len() == 2 {
-                func(argv[0], argv[1]).map_err(|e| e.to_string())
-            } else {
-                Err("Invalid arguments".to_string())
+    pub fn exec_func(&self, input: &str, argv: &[&str]) -> Result<String, String> {
+        if let Some(callback) = self.flags.get(input) {
+            if argv.len() < 2 {
+                return Err("Not enough arguments".to_string());
             }
+            callback(argv[0], argv[1]).map_err(|e| e.to_string())
         } else {
-            Err("Flag not found".to_string())
+            Err("Unknown flag".to_string())
         }
     }
 }
