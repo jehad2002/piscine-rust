@@ -1,84 +1,38 @@
-mod areas_volumes;
+pub mod areas_volumes;
 
-pub use areas_volumes::*;
+use areas_volumes::*;
 
 pub fn area_fit(
-    x: usize,
-    y: usize,
-    objects: GeometricalShapes,
+    (x, y): (usize, usize),
+    kind: GeometricalShapes,
     times: usize,
-    a: usize,
-    b: usize,
+    (a, b): (usize, usize),
 ) -> bool {
-    let area = rectangle_area(x, y);
-    match objects {
-        GeometricalShapes::Square => {
-            if square_area(a) * times > area {
-                return false;
-            }
-            true
-        }
-        GeometricalShapes::Circle => {
-            if circle_area(a) * times as f64 > area as f64 {
-                return false;
-            }
-            true
-        }
-        GeometricalShapes::Rectangle => {
-            if rectangle_area(a, b) * times > area {
-                return false;
-            }
-            true
-        }
-        GeometricalShapes::Triangle => {
-            if triangle_area(a, b) * times as f64 > area as f64 {
-                return false;
-            }
-            true
-        }
-    }
+    let area_size = x * y;
+    let shape_area = match kind {
+        GeometricalShapes::Square => square_area(a) as f64,
+        GeometricalShapes::Rectangle => rectangle_area(a, b) as f64,
+        GeometricalShapes::Triangle => triangle_area(a, b),
+        GeometricalShapes::Circle => circle_area(a),
+    };
+
+    shape_area * times as f64 <= area_size as f64
 }
+
 pub fn volume_fit(
-    x: usize,
-    y: usize,
-    z: usize,
-    objects: GeometricalVolumes,
+    (x, y, z): (usize, usize, usize),
+    kind: GeometricalVolumes,
     times: usize,
-    a: usize,
-    b: usize,
-    c: usize,
+    (a, b, c): (usize, usize, usize),
 ) -> bool {
-    let box_v = parallelepiped_volume(x, y, z);
-    match objects {
-        GeometricalVolumes::Cube => {
-            if cube_volume(a) * times > box_v {
-                return false;
-            }
-            true
-        }
-        GeometricalVolumes::Sphere => {
-            if sphere_volume(a) * times as f64 > box_v as f64 {
-                return false;
-            }
-            true
-        }
-        GeometricalVolumes::Cone => {
-            if cone_volume(a, b) * times as f64 > box_v as f64 {
-                return false;
-            }
-            true
-        }
-        GeometricalVolumes::Pyramid => {
-            if cone_volume(a, b) * times as f64> box_v as f64 {
-                return false;
-            }
-            true
-        }
-        GeometricalVolumes::Parallelepiped => {
-            if parallelepiped_volume(a, b, c) * times > box_v {
-                return false;
-            }
-            true
-        }
-    }
+    let box_volume = x * y * z;
+    let shape_volume = match kind {
+        GeometricalVolumes::Cube => cube_volume(a) as f64,
+        GeometricalVolumes::Sphere => sphere_volume(a),
+        GeometricalVolumes::Cone => cone_volume(a, b),
+        GeometricalVolumes::TriangularPyramid => triangular_pyramid_volume(a as f64, b),
+        GeometricalVolumes::Parallelepiped => parallelepiped_volume(a, b, c) as f64,
+    };
+
+    shape_volume * times as f64 <= box_volume as f64
 }
