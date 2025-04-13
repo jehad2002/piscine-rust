@@ -1,4 +1,5 @@
 pub mod areas_volumes;
+use crate::areas_volumes::{GeometricalShapes, GeometricalVolumes}; // Add this line
 
 use areas_volumes::*;
 
