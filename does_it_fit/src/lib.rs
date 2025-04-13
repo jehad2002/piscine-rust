@@ -1,49 +1,84 @@
-pub mod areas_volumes;
+mod areas_volumes;
 
-use areas_volumes::{GeometricalShapes, GeometricalVolumes};
+pub use areas_volumes::*;
 
 pub fn area_fit(
-    container_dimensions: (u32, u32),
-    shape: GeometricalShapes,
-    count: u32,
-    shape_dimensions: (u32, u32),
+    x: usize,
+    y: usize,
+    objects: GeometricalShapes,
+    times: usize,
+    a: usize,
+    b: usize,
 ) -> bool {
-    let container_area = container_dimensions.0 * container_dimensions.1;
-    let shape_area = match shape {
-        GeometricalShapes::Square => shape_dimensions.0.pow(2),
-        GeometricalShapes::Rectangle => shape_dimensions.0 * shape_dimensions.1,
-        GeometricalShapes::Triangle => (shape_dimensions.0 * shape_dimensions.1) / 2,
-        GeometricalShapes::Circle => {
-            let r = shape_dimensions.0;
-            (std::f64::consts::PI * (r.pow(2) as f64)) as u32
+    let area = rectangle_area(x, y);
+    match objects {
+        GeometricalShapes::Square => {
+            if square_area(a) * times > area {
+                return false;
+            }
+            true
         }
-    };
-
-    count * shape_area <= container_area
+        GeometricalShapes::Circle => {
+            if circle_area(a) * times as f64 > area as f64 {
+                return false;
+            }
+            true
+        }
+        GeometricalShapes::Rectangle => {
+            if rectangle_area(a, b) * times > area {
+                return false;
+            }
+            true
+        }
+        GeometricalShapes::Triangle => {
+            if triangle_area(a, b) * times as f64 > area as f64 {
+                return false;
+            }
+            true
+        }
+    }
 }
-
 pub fn volume_fit(
-    container_dimensions: (u32, u32, u32),
-    volume: GeometricalVolumes,
-    count: u32,
-    shape_dimensions: (u32, u32, u32),
+    x: usize,
+    y: usize,
+    z: usize,
+    objects: GeometricalVolumes,
+    times: usize,
+    a: usize,
+    b: usize,
+    c: usize,
 ) -> bool {
-    let container_volume = container_dimensions.0 * container_dimensions.1 * container_dimensions.2;
-    let shape_volume = match volume {
-        GeometricalVolumes::Cube => shape_dimensions.0.pow(3),
-        GeometricalVolumes::Parallelepiped => {
-            shape_dimensions.0 * shape_dimensions.1 * shape_dimensions.2
+    let box_v = parallelepiped_volume(x, y, z);
+    match objects {
+        GeometricalVolumes::Cube => {
+            if cube_volume(a) * times > box_v {
+                return false;
+            }
+            true
         }
         GeometricalVolumes::Sphere => {
-            let r = shape_dimensions.0;
-            ((4.0 / 3.0) * std::f64::consts::PI * (r.pow(3) as f64)) as u32
+            if sphere_volume(a) * times as f64 > box_v as f64 {
+                return false;
+            }
+            true
         }
-        GeometricalVolumes::Cylinder => {
-            let r = shape_dimensions.0;
-            let h = shape_dimensions.1;
-            (std::f64::consts::PI * (r.pow(2) as f64) * (h as f64)) as u32
+        GeometricalVolumes::Cone => {
+            if cone_volume(a, b) * times as f64 > box_v as f64 {
+                return false;
+            }
+            true
         }
-    };
-
-    count * shape_volume <= container_volume
+        GeometricalVolumes::Pyramid => {
+            if cone_volume(a, b) * times as f64> box_v as f64 {
+                return false;
+            }
+            true
+        }
+        GeometricalVolumes::Parallelepiped => {
+            if parallelepiped_volume(a, b, c) * times > box_v {
+                return false;
+            }
+            true
+        }
+    }
 }
