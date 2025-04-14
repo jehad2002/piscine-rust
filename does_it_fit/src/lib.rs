@@ -1,6 +1,7 @@
 pub mod areas_volumes;
 
-use areas_volumes::{GeometricalShapes, GeometricalVolumes};
+use crate::areas_volumes::{GeometricalShapes, GeometricalVolumes};
+
 
 pub fn area_fit(
     (x, y): (usize, usize),
