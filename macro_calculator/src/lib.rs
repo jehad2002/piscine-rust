@@ -1,10 +1,9 @@
 use json::JsonValue;
 
 #[derive(Clone)]
-
 pub struct Food {
     pub name: String,
-    pub calories: [String; 2],
+    pub calories: [String; 2], // Use array instead of tuple
     pub fats: f64,
     pub carbs: f64,
     pub proteins: f64,
