@@ -1,40 +1,42 @@
-mod areas_volumes;
+pub mod areas_volumes;
 
-pub use areas_volumes::*;
+use areas_volumes::{GeometricalShapes, GeometricalVolumes};
 
 pub fn area_fit(
-    x: usize,
-    y: usize,
-    objects: GeometricalShapes,
+    (x, y): (usize, usize),
+    kind: GeometricalShapes,
     times: usize,
-    a: usize,
-    b: usize,
+    (a, b): (usize, usize),
 ) -> bool {
-    let area = rectangle_area(x, y);
-    match objects {
-        GeometricalShapes::Square => square_area(a) * times <= area,
-        GeometricalShapes::Circle => circle_area(a) * times as f64 <= area as f64,
-        GeometricalShapes::Rectangle => rectangle_area(a, b) * times <= area,
-        GeometricalShapes::Triangle => triangle_area(a, b) * times as f64 <= area as f64,
-    }
+    let total_area = x * y;
+    let required_area = match kind {
+        GeometricalShapes::Square => areas_volumes::square_area(a) as f64,
+        GeometricalShapes::Rectangle => areas_volumes::rectangle_area(a, b) as f64,
+        GeometricalShapes::Triangle => areas_volumes::triangle_area(a, b),
+        GeometricalShapes::Circle => areas_volumes::circle_area(a),
+    };
+
+    total_area as f64 >= required_area * times as f64
 }
 
 pub fn volume_fit(
-    x: usize,
-    y: usize,
-    z: usize,
-    objects: GeometricalVolumes,
+    (x, y, z): (usize, usize, usize),
+    kind: GeometricalVolumes,
     times: usize,
-    a: usize,
-    b: usize,
-    c: usize,
+    (a, b, c): (usize, usize, usize),
 ) -> bool {
-    let box_v = parallelepiped_volume(x, y, z);
-    match objects {
-        GeometricalVolumes::Cube => cube_volume(a) * times <= box_v,
-        GeometricalVolumes::Sphere => sphere_volume(a) * times as f64 <= box_v as f64,
-        GeometricalVolumes::Cone => cone_volume(a, b) * times as f64 <= box_v as f64,
-        GeometricalVolumes::Pyramid => cone_volume(a, b) * times as f64 <= box_v as f64, // Uses cone formula
-        GeometricalVolumes::Parallelepiped => parallelepiped_volume(a, b, c) * times <= box_v,
-    }
+    let total_volume = x * y * z;
+    let required_volume = match kind {
+        GeometricalVolumes::Cube => areas_volumes::cube_volume(a) as f64,
+        GeometricalVolumes::Sphere => areas_volumes::sphere_volume(a),
+        GeometricalVolumes::TriangularPyramid => {
+            areas_volumes::triangular_pyramid_volume(a as f64, b)
+        }
+        GeometricalVolumes::Parallelepiped => {
+            areas_volumes::parallelepiped_volume(a, b, c) as f64
+        }
+        GeometricalVolumes::Cone => areas_volumes::cone_volume(a, b),
+    };
+
+    total_volume as f64 >= required_volume * times as f64
 }

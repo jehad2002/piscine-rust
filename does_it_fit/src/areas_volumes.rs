@@ -9,7 +9,7 @@ pub enum GeometricalVolumes {
     Cube,
     Sphere,
     Cone,
-    Pyramid,
+    TriangularPyramid,
     Parallelepiped,
 }
 
