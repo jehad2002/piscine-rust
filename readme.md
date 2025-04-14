@@ -35,6 +35,7 @@ Level 4
 Level 5
 - Queens
 - Scytale_cipher
+
 Exam 03
 Level 1
 - partial_sums
@@ -65,6 +66,7 @@ Level 6
 - drop_the_thread
 - lunch_queue
 Exam 04
+
 Level 1
 - division_and_remainder
 - find_factorial
