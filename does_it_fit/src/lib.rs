@@ -1,39 +1,40 @@
-pub mod areas_volumes;
-use crate::areas_volumes::{GeometricalShapes, GeometricalVolumes}; // Add this line
+mod areas_volumes;
 
-use areas_volumes::*;
+pub use areas_volumes::*;
 
 pub fn area_fit(
-    (x, y): (usize, usize),
-    kind: GeometricalShapes,
+    x: usize,
+    y: usize,
+    objects: GeometricalShapes,
     times: usize,
-    (a, b): (usize, usize),
+    a: usize,
+    b: usize,
 ) -> bool {
-    let area_size = x * y;
-    let shape_area = match kind {
-        GeometricalShapes::Square => square_area(a) as f64,
-        GeometricalShapes::Rectangle => rectangle_area(a, b) as f64,
-        GeometricalShapes::Triangle => triangle_area(a, b),
-        GeometricalShapes::Circle => circle_area(a),
-    };
-
-    shape_area * times as f64 <= area_size as f64
+    let area = rectangle_area(x, y);
+    match objects {
+        GeometricalShapes::Square => square_area(a) * times <= area,
+        GeometricalShapes::Circle => circle_area(a) * times as f64 <= area as f64,
+        GeometricalShapes::Rectangle => rectangle_area(a, b) * times <= area,
+        GeometricalShapes::Triangle => triangle_area(a, b) * times as f64 <= area as f64,
+    }
 }
 
 pub fn volume_fit(
-    (x, y, z): (usize, usize, usize),
-    kind: GeometricalVolumes,
+    x: usize,
+    y: usize,
+    z: usize,
+    objects: GeometricalVolumes,
     times: usize,
-    (a, b, c): (usize, usize, usize),
+    a: usize,
+    b: usize,
+    c: usize,
 ) -> bool {
-    let box_volume = x * y * z;
-    let shape_volume = match kind {
-        GeometricalVolumes::Cube => cube_volume(a) as f64,
-        GeometricalVolumes::Sphere => sphere_volume(a),
-        GeometricalVolumes::Cone => cone_volume(a, b),
-        GeometricalVolumes::TriangularPyramid => triangular_pyramid_volume(a as f64, b),
-        GeometricalVolumes::Parallelepiped => parallelepiped_volume(a, b, c) as f64,
-    };
-
-    shape_volume * times as f64 <= box_volume as f64
+    let box_v = parallelepiped_volume(x, y, z);
+    match objects {
+        GeometricalVolumes::Cube => cube_volume(a) * times <= box_v,
+        GeometricalVolumes::Sphere => sphere_volume(a) * times as f64 <= box_v as f64,
+        GeometricalVolumes::Cone => cone_volume(a, b) * times as f64 <= box_v as f64,
+        GeometricalVolumes::Pyramid => cone_volume(a, b) * times as f64 <= box_v as f64, // Uses cone formula
+        GeometricalVolumes::Parallelepiped => parallelepiped_volume(a, b, c) * times <= box_v,
+    }
 }
