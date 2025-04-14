@@ -16,91 +16,91 @@ Level 4
 
 Exam 02
 Level 1
-Previousprime
-Nextprime
-reverse_it
+- Previousprime
+- Nextprime
+- reverse_it
 Level 2
-find_factorial
-Fibonacci2
-copy
-Matrix_determinant
+- find_factorial
+- Fibonacci2
+- copy
+- Matrix_determinant
 Level 3
-profanity_fitter
-question_mark
-talking
+- profanity_fitter
+- question_mark
+- talking
 Level 4
-Rot21
-order_books
-Cipher
+- Rot21
+- order_books
+- Cipher
 Level 5
-Queens
-Scytale_cipher
+- Queens
+- Scytale_cipher
 Exam 03
 Level 1
-partial_sums
-counting_words
-inv_pyramid
-previousprime
-nextprime
-reverse_it
+- partial_sums
+- counting_words
+- inv_pyramid
+- previousprime
+- nextprime
+- reverse_it
 Level 2
-profanity_filter
-question_mark
-talking
+- profanity_filter
+- question_mark
+- talking
 Level 3
-spelling
-rpn
-queens
-scytale_cipher
+- spelling
+- rpn
+- queens
+- scytale_cipher
 Level 4
-roman_numbers
-matrix_display
-generics_list
+- roman_numbers
+- matrix_display
+- generics_list
 Level 5
-box recursion
-commits _stats
-blood_type_s
+- box recursion
+- commits _stats
+- blood_type_s
 Level 6
-ref-cell
-drop_the_thread
-lunch_queue
+- ref-cell
+- drop_the_thread
+- lunch_queue
 Exam 04
 Level 1
-division_and_remainder
-find_factorial
-matrix_transposition
+- division_and_remainder
+- find_factorial
+- matrix_transposition
 Level 2
-reverse_it
-counting_words
-bigger
-capitalizing
+- reverse_it
+- counting_words
+- bigger
+- capitalizing
 Level 3
-partial_sums
-inv_pyramid
-previousprime
-nextprime
-profanity_filter
-cipher
-scytale_cipher
+- partial_sums
+- inv_pyramid
+- previousprime
+- nextprime
+- profanity_filter
+- cipher
+- scytale_cipher
 Level 4
-insertion_sort
-rpn
-rot21
-order_books
-matrix_determinant
+- insertion_sort
+- rpn
+- rot21
+- order_books
+- matrix_determinant
 Level 5
-roman_numbers
-blood_types_s
+- roman_numbers
+- blood_types_s
 Level 6
-matrix_display
-queens
-lunch_queue
+- matrix_display
+- queens
+- lunch_queue
 Level 7
-drop_the_thread
-filter_table
-display_table
+- drop_the_thread
+- filter_table
+- display_table
 Level 8
-flat_tree
+- flat_tree
 Level 9
-brackets_matching
-brain_fuck
+- brackets_matching
+- brain_fuck

@@ -1,5 +1,4 @@
 use does_it_fit::*;
-use does_it_fit::areas_volumes::{GeometricalShapes, GeometricalVolumes};
 
 fn main() {
     println!(
@@ -15,7 +14,7 @@ fn main() {
         volume_fit((5, 5, 5), GeometricalVolumes::Sphere, 3, (2, 0, 0))
     );
     println!(
-        "Does 1 parallelepiped (6 base, 7 height and depth 4) fit in a 5 by 7 by 5 box? {}",
+        "Does 1 parallelepiped (6 base, 7 height and depth 4) fit in a 5 by 7 by 5 parallelepiped? {}",
         volume_fit((5, 7, 5), GeometricalVolumes::Parallelepiped, 1, (6, 7, 4))
     );
 }
