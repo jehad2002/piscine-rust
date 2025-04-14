@@ -1,5 +1,7 @@
 use json::JsonValue;
 
+#[derive(Clone)]
+
 pub struct Food {
     pub name: String,
     pub calories: [String; 2],
