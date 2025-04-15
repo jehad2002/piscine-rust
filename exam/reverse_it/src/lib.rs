@@ -13,10 +13,10 @@
 pub fn reverse_it(v: i32) -> String {
     let mut x = v;
     let mut y = 0;
-    let mut sign = 1;
+    let mut z = 1;
     if v < 0 {
-        sign = -1;
-        x *= sign;
+        z = -1;
+        x *= z;
     }
     let mut steps = 1;
     while x != 0 {
@@ -26,5 +26,5 @@ pub fn reverse_it(v: i32) -> String {
         x /= 10;
     }
 
-    (y*sign*steps + v).to_string()
+    (y*z*steps + v).to_string()
 }
