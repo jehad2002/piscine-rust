@@ -1,36 +1,31 @@
-use std::rc::Rc;
-use std::cell::RefCell;
-use ref_cell::messenger::{Logger, Tracker};
-
-struct TestLogger {
-    pub messages: RefCell<Vec<String>>,
-    pub value: Rc<usize>,
-}
-
-impl Logger for TestLogger {
-    fn warning(&self, msg: &str) {
-        self.messages.borrow_mut().push(format!("Warning: {}", msg));
-    }
-    fn info(&self, msg: &str) {
-        self.messages.borrow_mut().push(format!("Info: {}", msg));
-    }
-    fn error(&self, msg: &str) {
-        self.messages.borrow_mut().push(format!("Error: {}", msg));
-    }
-}
+use ref_cell::*;
 
 fn main() {
-    let val = Rc::new(100);
-    let logger = TestLogger {
-        messages: RefCell::new(Vec::new()),
-        value: Rc::clone(&val),
-    };
+    let logger = Worker::new(1);
+    let track = messenger::Tracker::new(&logger, 10);
 
-    let tracker = Tracker::new(&logger, 5);
-    tracker.set_value(&logger.value);
-    tracker.peek(&logger.value);
+    let _a = logger.track_value.clone();
+    let _a1 = logger.track_value.clone();
+    let _a2 = logger.track_value.clone();
 
-    for m in logger.messages.borrow().iter() {
-        println!("{}", m);
+    track.peek(&logger.track_value);
+
+    let _b = logger.track_value.clone();
+    let _b1 = logger.track_value.clone();
+    let _b2 = logger.track_value.clone();
+    let _b3 = logger.track_value.clone();
+
+    track.set_value(&logger.track_value);
+
+    let _c = logger.track_value.clone();
+    track.set_value(&logger.track_value);
+
+    let _c1 = logger.track_value.clone();
+    track.set_value(&logger.track_value);
+
+    for (k, v) in logger.mapped_messages.into_inner() {
+        println!("{:?}", (k, v));
     }
+
+    println!("{:?}", logger.all_messages.into_inner());
 }
