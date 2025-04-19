@@ -9,37 +9,31 @@ pub trait Logger {
 
 pub struct Tracker<'a, T: Logger> {
     logger: &'a T,
-    value: usize,
     max: usize,
 }
 
 impl<'a, T: Logger> Tracker<'a, T> {
     pub fn new(logger: &'a T, max: usize) -> Self {
-        Tracker {
-            logger,
-            value: 0,
-            max,
-        }
+        Tracker { logger, max }
     }
 
-    pub fn set_value<U>(&self, value: &Rc<U>) {
+    pub fn set_value(&self, value: &Rc<usize>) {
         let count = Rc::strong_count(value);
-        let percentage = (count * 100) / self.max;
-
-        if percentage >= 100 {
+        let percent = (count * 100) / self.max;
+        if percent >= 100 {
             self.logger.error("Error: you are over your quota!");
-        } else if percentage >= 70 {
-            self.logger
-                .warning(&format!("Warning: you have used up over {}% of your quota! Proceeds with precaution", percentage));
+        } else if percent >= 70 {
+            self.logger.warning(&format!(
+                "Warning: you have used up over {}% of your quota! Proceeds with precaution",
+                percent
+            ));
         }
-
-        // We do not mutate self.value here because it’s unnecessary for functionality.
     }
 
-    pub fn peek<U>(&self, value: &Rc<U>) {
+    pub fn peek(&self, value: &Rc<usize>) {
         let count = Rc::strong_count(value);
-        let percentage = (count * 100) / self.max;
+        let percent = (count * 100) / self.max;
         self.logger
-            .info(&format!("Info: you are using up to {}% of your quota", percentage));
+            .info(&format!("Info: you are using up to {}% of your quota", percent));
     }
 }

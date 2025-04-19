@@ -1,9 +1,8 @@
 pub mod messenger;
 
-use std::collections::HashMap;
 use std::cell::RefCell;
+use std::collections::HashMap;
 use std::rc::Rc;
-
 use messenger::Logger;
 
 pub struct Worker {
@@ -17,7 +16,7 @@ impl Worker {
         Worker {
             track_value: Rc::new(value),
             mapped_messages: RefCell::new(HashMap::new()),
-            all_messages: RefCell::new(Vec::new()),
+            all_messages: RefCell::new(vec![]),
         }
     }
 }
