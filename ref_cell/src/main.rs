@@ -1,8 +1,9 @@
 use ref_cell::*;
+use ref_cell::messenger::Tracker;
 
 fn main() {
     let logger = Worker::new(1);
-    let track = messenger::Tracker::new(&logger, 10);
+    let mut track = Tracker::new(&logger, 10);
 
     let _a = logger.track_value.clone();
     let _a1 = logger.track_value.clone();
@@ -18,9 +19,11 @@ fn main() {
     track.set_value(&logger.track_value);
 
     let _c = logger.track_value.clone();
+
     track.set_value(&logger.track_value);
 
     let _c1 = logger.track_value.clone();
+
     track.set_value(&logger.track_value);
 
     for (k, v) in logger.mapped_messages.into_inner() {

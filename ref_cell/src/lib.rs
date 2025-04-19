@@ -12,11 +12,11 @@ pub struct Worker {
 }
 
 impl Worker {
-    pub fn new(value: usize) -> Self {
-        Worker {
-            track_value: Rc::new(value),
+    pub fn new(val: usize) -> Self {
+        Self {
+            track_value: Rc::new(val),
             mapped_messages: RefCell::new(HashMap::new()),
-            all_messages: RefCell::new(vec![]),
+            all_messages: RefCell::new(Vec::new()),
         }
     }
 }
