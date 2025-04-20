@@ -13,12 +13,4 @@ fn main() {
 
     new_list_str.pop();
     println!("The size of the list is {}", new_list_str.len());
-
-    // Optional: Traversing and printing the values
-    println!("Values in list:");
-    let mut current = &new_list_str.head;
-    while let Some(node) = current {
-        println!("  {}", node.value);
-        current = &node.next;
-    }
 }
