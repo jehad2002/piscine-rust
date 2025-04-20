@@ -15,23 +15,23 @@ impl<T> List<T> {
         List { head: None }
     }
 
-    // Push a new element to the beginning of the list (LIFO style)
+    // Push a new element to the beginning of the list (LIFO)
     pub fn push(&mut self, value: T) {
-        let new_node = Node {
+        let new_node = Box::new(Node {
             value,
-            next: self.head.take(), // take the current head and assign as next
-        };
-        self.head = Some(Box::new(new_node));
+            next: self.head.take(),
+        });
+        self.head = Some(new_node);
     }
 
-    // Pop an element from the front of the list
+    // Pop the front element from the list
     pub fn pop(&mut self) {
         if let Some(node) = self.head.take() {
             self.head = node.next;
         }
     }
 
-    // Return the length of the list
+    // Return the number of elements in the list
     pub fn len(&self) -> usize {
         let mut count = 0;
         let mut current = &self.head;
