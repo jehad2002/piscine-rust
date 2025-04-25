@@ -1,33 +1,36 @@
-// Define the Scalar trait
-pub trait Scalar: Clone {
-    fn zero() -> Self;
-    fn one() -> Self;
+pub mod ops;
+
+pub trait Scalar {
+    type Item;
+
+    fn zero() -> Self::Item;
+    fn one() -> Self::Item;
 }
 
-// Implement Scalar for commonly used types
 impl Scalar for i32 {
-    fn zero() -> Self { 0 }
-    fn one() -> Self { 1 }
+    type Item = i32;
+    fn zero() -> Self::Item { 0 }
+    fn one() -> Self::Item { 1 }
 }
 
 impl Scalar for u32 {
-    fn zero() -> Self { 0 }
-    fn one() -> Self { 1 }
+    type Item = u32;
+    fn zero() -> Self::Item { 0 }
+    fn one() -> Self::Item { 1 }
 }
 
 impl Scalar for f64 {
-    fn zero() -> Self { 0.0 }
-    fn one() -> Self { 1.0 }
+    type Item = f64;
+    fn zero() -> Self::Item { 0.0 }
+    fn one() -> Self::Item { 1.0 }
 }
 
-// Matrix struct
-#[derive(Debug, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct Matrix<T>(pub Vec<Vec<T>>);
 
-// Matrix impl with new, zero, identity
-impl<T: Scalar> Matrix<T> {
+impl<T: Scalar<Item = T> + Clone> Matrix<T> {
     pub fn new() -> Matrix<T> {
-        Matrix(vec![vec![T::zero()]])
+        Matrix(vec![vec![T::one()]])
     }
 
     pub fn zero(row: usize, col: usize) -> Matrix<T> {
@@ -35,10 +38,10 @@ impl<T: Scalar> Matrix<T> {
     }
 
     pub fn identity(n: usize) -> Matrix<T> {
-        let mut mat = vec![vec![T::zero(); n]; n];
+        let mut result = vec![vec![T::zero(); n]; n];
         for i in 0..n {
-            mat[i][i] = T::one();
+            result[i][i] = T::one();
         }
-        Matrix(mat)
+        Matrix(result)
     }
 }
