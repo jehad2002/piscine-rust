@@ -21,7 +21,7 @@ impl Scalar for f64 {
 }
 
 // Matrix struct
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Eq)]
 pub struct Matrix<T>(pub Vec<Vec<T>>);
 
 // Matrix impl with new, zero, identity
