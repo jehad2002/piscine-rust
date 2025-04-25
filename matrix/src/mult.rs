@@ -5,11 +5,7 @@ pub struct Matrix<T>(pub Vec<Vec<T>>);
 
 impl<T: Clone> Matrix<T> {
     pub fn number_of_cols(&self) -> usize {
-        if self.0.is_empty() {
-            0
-        } else {
-            self.0[0].len()
-        }
+        if self.0.is_empty() { 0 } else { self.0[0].len() }
     }
 
     pub fn number_of_rows(&self) -> usize {
@@ -32,20 +28,17 @@ where
     type Output = Option<Matrix<T>>;
 
     fn mul(self, rhs: Matrix<T>) -> Self::Output {
-        let rows_lhs = self.number_of_rows();
-        let cols_lhs = self.number_of_cols();
-        let rows_rhs = rhs.number_of_rows();
-        let cols_rhs = rhs.number_of_cols();
-
-        if cols_lhs != rows_rhs {
+        if self.number_of_cols() != rhs.number_of_rows() {
             return None;
         }
 
-        let mut result = vec![vec![T::default(); cols_rhs]; rows_lhs];
+        let rows = self.number_of_rows();
+        let cols = rhs.number_of_cols();
+        let mut result = vec![vec![T::default(); cols]; rows];
 
-        for i in 0..rows_lhs {
-            for j in 0..cols_rhs {
-                for k in 0..cols_lhs {
+        for i in 0..rows {
+            for j in 0..cols {
+                for k in 0..self.number_of_cols() {
                     result[i][j] += self.0[i][k].clone() * rhs.0[k][j].clone();
                 }
             }
