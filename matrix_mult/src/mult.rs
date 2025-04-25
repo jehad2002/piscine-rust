@@ -1,11 +1,17 @@
-use std::ops::{Mul, AddAssign};
+// matrix/src/mult.rs
+use std::ops::Mul;
+use std::fmt::Debug;
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct Matrix<T>(pub Vec<Vec<T>>);
 
 impl<T: Clone> Matrix<T> {
     pub fn number_of_cols(&self) -> usize {
-        if self.0.is_empty() { 0 } else { self.0[0].len() }
+        if self.0.is_empty() || self.0[0].is_empty() {
+            0
+        } else {
+            self.0[0].len()
+        }
     }
 
     pub fn number_of_rows(&self) -> usize {
@@ -23,24 +29,26 @@ impl<T: Clone> Matrix<T> {
 
 impl<T> Mul for Matrix<T>
 where
-    T: Clone + Default + Mul<Output = T> + AddAssign,
+    T: Copy + Mul<Output = T> + std::iter::Sum + Default + Debug,
 {
     type Output = Option<Matrix<T>>;
 
-    fn mul(self, rhs: Matrix<T>) -> Self::Output {
+    fn mul(self, rhs: Self) -> Self::Output {
         if self.number_of_cols() != rhs.number_of_rows() {
             return None;
         }
 
         let rows = self.number_of_rows();
         let cols = rhs.number_of_cols();
+        let common_dim = self.number_of_cols();
+
         let mut result = vec![vec![T::default(); cols]; rows];
 
         for i in 0..rows {
             for j in 0..cols {
-                for k in 0..self.number_of_cols() {
-                    result[i][j] += self.0[i][k].clone() * rhs.0[k][j].clone();
-                }
+                result[i][j] = (0..common_dim)
+                    .map(|k| self.0[i][k] * rhs.0[k][j])
+                    .sum();
             }
         }
 
