@@ -5,3 +5,4 @@ edition = "2018"
 
 [dependencies]
 matrix_ops = { path = "../matrix_ops" }
+matrix_ops = { path = "../matrix_mult" }
