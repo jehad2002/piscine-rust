@@ -1,49 +1,44 @@
-// src/lib.rs
-use std::ops::{Add, Sub};
-
-#[derive(Debug, Clone)]
-pub struct Matrix(pub Vec<Vec<i32>>);
-
-impl Add for Matrix {
-    type Output = Option<Matrix>;
-
-    fn add(self, other: Matrix) -> Option<Matrix> {
-        if self.0.len() != other.0.len() || self.0[0].len() != other.0[0].len() {
-            return None;
-        }
-
-        let result = self.0.iter()
-            .zip(other.0.iter())
-            .map(|(row1, row2)| {
-                row1.iter()
-                    .zip(row2.iter())
-                    .map(|(a, b)| a + b)
-                    .collect::<Vec<i32>>()
-            })
-            .collect::<Vec<Vec<i32>>>();
-
-        Some(Matrix(result))
-    }
+// Define the Scalar trait
+pub trait Scalar: Clone {
+    fn zero() -> Self;
+    fn one() -> Self;
 }
 
-impl Sub for Matrix {
-    type Output = Option<Matrix>;
+// Implement Scalar for commonly used types
+impl Scalar for i32 {
+    fn zero() -> Self { 0 }
+    fn one() -> Self { 1 }
+}
 
-    fn sub(self, other: Matrix) -> Option<Matrix> {
-        if self.0.len() != other.0.len() || self.0[0].len() != other.0[0].len() {
-            return None;
+impl Scalar for u32 {
+    fn zero() -> Self { 0 }
+    fn one() -> Self { 1 }
+}
+
+impl Scalar for f64 {
+    fn zero() -> Self { 0.0 }
+    fn one() -> Self { 1.0 }
+}
+
+// Matrix struct
+#[derive(Debug, PartialEq, Eq)]
+pub struct Matrix<T>(pub Vec<Vec<T>>);
+
+// Matrix impl with new, zero, identity
+impl<T: Scalar> Matrix<T> {
+    pub fn new() -> Matrix<T> {
+        Matrix(vec![vec![T::zero()]])
+    }
+
+    pub fn zero(row: usize, col: usize) -> Matrix<T> {
+        Matrix(vec![vec![T::zero(); col]; row])
+    }
+
+    pub fn identity(n: usize) -> Matrix<T> {
+        let mut mat = vec![vec![T::zero(); n]; n];
+        for i in 0..n {
+            mat[i][i] = T::one();
         }
-
-        let result = self.0.iter()
-            .zip(other.0.iter())
-            .map(|(row1, row2)| {
-                row1.iter()
-                    .zip(row2.iter())
-                    .map(|(a, b)| a - b)
-                    .collect::<Vec<i32>>()
-            })
-            .collect::<Vec<Vec<i32>>>();
-
-        Some(Matrix(result))
+        Matrix(mat)
     }
 }
