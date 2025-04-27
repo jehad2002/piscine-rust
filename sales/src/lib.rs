@@ -44,9 +44,9 @@ impl Cart {
         let mut total_discount = 0.0;
         let mut i = 0;
 
+        // Calculate the total discount for groups of three
         while i + 2 < sorted_items.len() {
-            // The cheapest item in the set of three is free
-            total_discount += sorted_items[i];
+            total_discount += sorted_items[i]; // The cheapest item in the group is free
             i += 3; // Move to the next group of three
         }
 
@@ -54,8 +54,8 @@ impl Cart {
         let total_sum: f32 = sorted_items.iter().sum();
         let discount_percentage = 1.0 - (total_discount / total_sum);
 
-        // Adjust all item prices with the discount
-        let mut adjusted_items: Vec<f32> = sorted_items
+        // Adjust all item prices with the discount and apply rounding to two decimals
+        let adjusted_items: Vec<f32> = sorted_items
             .into_iter()
             .map(|price| (price * discount_percentage).round() * 100.0 / 100.0) // Round to two decimals
             .collect();
