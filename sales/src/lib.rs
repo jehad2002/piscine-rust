@@ -49,8 +49,6 @@ impl Cart {
         prices.sort_by(|a, b| a.partial_cmp(b).unwrap());  // ترتيب الأسعار
 
         // تطبيق الخصم "اشترِ ثلاثة، واحصل على واحد مجانًا"
-        let mut total_discount = 0.0;
-
         for chunk in prices.chunks_mut(3) {
             if chunk.len() == 3 {
                 let mut min_price = chunk[0];
