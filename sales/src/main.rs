@@ -14,8 +14,8 @@ fn main() {
     cart.insert_item(&store, String::from("product B"));
     cart.insert_item(&store, String::from("product C"));
 
-    // تم تمرير `store` إلى `generate_receipt`
-    println!("{:?}", cart.generate_receipt(&store));
+    // تأكد من تمرير store كوسيط
+    println!("{:?}", cart.generate_receipt(&store));  // تمرير store هنا
 
     println!("{:?}", cart);
 }
