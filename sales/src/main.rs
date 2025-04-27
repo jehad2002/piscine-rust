@@ -1,6 +1,5 @@
-// main.rs
 
-use sales::*;  // استيراد مكتبة sales
+use sales::*;  
 
 fn main() {
     let store = Store::new(vec![
@@ -16,9 +15,7 @@ fn main() {
     cart.insert_item(&store, String::from("product B"));
     cart.insert_item(&store, String::from("product C"));
 
-    // طباعة الإيصال مع تمرير المتجر كوسيلة
     println!("{:?}", cart.generate_receipt(&store));
 
-    // طباعة العربة نفسها
     println!("{:?}", cart);
 }
