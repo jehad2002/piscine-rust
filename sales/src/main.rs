@@ -1,5 +1,3 @@
-// main.rs
-
 use sales::*;
 
 fn main() {
@@ -16,7 +14,8 @@ fn main() {
     cart.insert_item(&store, String::from("product B"));
     cart.insert_item(&store, String::from("product C"));
 
-    println!("{:?}", cart.generate_receipt(&store)); // هنا تم إضافة `&store`
+    // تم تمرير `store` إلى `generate_receipt`
+    println!("{:?}", cart.generate_receipt(&store));
 
     println!("{:?}", cart);
 }
