@@ -1,73 +1,40 @@
-// sales/src/lib.rs
-
 #[derive(Debug, Clone, PartialEq)]
 pub struct Store {
     pub products: Vec<(String, f32)>,
 }
-
 impl Store {
     pub fn new(products: Vec<(String, f32)>) -> Store {
         Store { products }
-    }
-
-    pub fn get_price(&self, product_name: &str) -> Option<f32> {
-        self.products.iter().find_map(|(name, price)| {
-            if name == product_name {
-                Some(*price)
-            } else {
-                None
-            }
-        })
+    
     }
 }
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct Cart {
-    pub items: Vec<String>,
-    pub receipt: Vec<f32>,  // حقل لحفظ الإيصال
+    // expected public fields
+    pub items: Vec<(String, f32)>,
 }
-
 impl Cart {
     pub fn new() -> Cart {
-        Cart {
-            items: Vec::new(),
-            receipt: Vec::new(),
-        }
-    }
-
-    pub fn insert_item(&mut self, store: &Store, ele: String) {
-        if let Some(_price) = store.get_price(&ele) {
-            self.items.push(ele);
-        }
-    }
-
-    pub fn generate_receipt(&mut self, store: &Store) -> Vec<f32> {
-        let mut prices: Vec<f32> = self.items.iter()
-            .filter_map(|item| store.get_price(item))
-            .collect();
+        Cart { items: vec![] }
         
-        prices.sort_by(|a, b| a.partial_cmp(b).unwrap());  // ترتيب الأسعار
-
-        // تطبيق الخصم "اشترِ ثلاثة، واحصل على واحد مجانًا"
-        for chunk in prices.chunks_mut(3) {
-            if chunk.len() == 3 {
-                let mut min_price = chunk[0];
-                chunk[0] = 0.0; // جعل الأقل مجانًا
-                for &price in chunk.iter() {
-                    if price < min_price {
-                        min_price = price;
-                    }
-                }
-            }
+    }
+    pub fn insert_item(&mut self, s: &Store, ele: String) {
+        // Check if the item exists in the store
+        if let Some(product) = s.products.iter().find(|(name, _)| name == &ele) {
+            // Add the item to the cart
+            self.items.push(product.clone());
+        } else {
+            println!("Item not found in store: {}", ele);
         }
-
-        // ضبط الأسعار لتكون دقيقة بمقدار عشريين
-        for price in &mut prices {
-            *price = (*price * 100.0).round() / 100.0;  // تم تعديل هذه السطر هنا
+    }
+    pub fn generate_receipt(&mut self) -> Vec<f32> {
+        // Calculate the total price of items in the cart
+        let mut total_price = 0.0;
+        for item in &self.items {
+            total_price += item.1;
         }
-
-        // حفظ النتيجة في حقل الإيصال
-        self.receipt = prices.clone();
-        prices
+        // Return the total price as a vector
+        vec![total_price]
     }
 }
