@@ -1,40 +1,67 @@
+// lib.rs
+
 #[derive(Debug, Clone, PartialEq)]
 pub struct Store {
     pub products: Vec<(String, f32)>,
 }
+
 impl Store {
+    // Initializes the store with a list of products and their prices
     pub fn new(products: Vec<(String, f32)>) -> Store {
         Store { products }
-    
     }
 }
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct Cart {
-    // expected public fields
-    pub items: Vec<(String, f32)>,
+    pub items: Vec<(String, f32)>, // Items in the cart
+    pub receipt: Vec<f32>,         // Receipt after applying discounts
 }
+
 impl Cart {
+    // Initializes a new, empty cart
     pub fn new() -> Cart {
-        Cart { items: vec![] }
-        
+        Cart {
+            items: Vec::new(),
+            receipt: Vec::new(),
+        }
     }
-    pub fn insert_item(&mut self, s: &Store, ele: String) {
-        // Check if the item exists in the store
-        if let Some(product) = s.products.iter().find(|(name, _)| name == &ele) {
-            // Add the item to the cart
+
+    // Inserts an item into the cart based on the store's products
+    pub fn insert_item(&mut self, store: &Store, item_name: String) {
+        if let Some(product) = store.products.iter().find(|(name, _)| name == &item_name) {
             self.items.push(product.clone());
-        } else {
-            println!("Item not found in store: {}", ele);
         }
     }
+
+    // Generates the receipt with the promotion applied
     pub fn generate_receipt(&mut self) -> Vec<f32> {
-        // Calculate the total price of items in the cart
-        let mut total_price = 0.0;
-        for item in &self.items {
-            total_price += item.1;
+        // First, sort the items by price in ascending order
+        let mut sorted_items: Vec<f32> = self.items.iter().map(|(_, price)| *price).collect();
+        sorted_items.sort_by(|a, b| a.partial_cmp(b).unwrap());
+
+        // Apply the promotion: every three items, the cheapest is free
+        let mut total_discount = 0.0;
+        let mut i = 0;
+
+        while i + 2 < sorted_items.len() {
+            // The cheapest item in the set of three is free
+            total_discount += sorted_items[i];
+            i += 3; // Move to the next group of three
         }
-        // Return the total price as a vector
-        vec![total_price]
+
+        // Now we will apply the discount proportionally to all items
+        let total_sum: f32 = sorted_items.iter().sum();
+        let discount_percentage = 1.0 - (total_discount / total_sum);
+
+        // Adjust all item prices with the discount
+        let mut adjusted_items: Vec<f32> = sorted_items
+            .into_iter()
+            .map(|price| (price * discount_percentage).round() * 100.0 / 100.0) // Round to two decimals
+            .collect();
+
+        // Save the receipt
+        self.receipt = adjusted_items.clone();
+        adjusted_items
     }
 }
