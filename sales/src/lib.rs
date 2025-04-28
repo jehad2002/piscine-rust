@@ -95,27 +95,28 @@ impl Cart {
         let mut prices: Vec<f32> = self.items.iter().map(|(_, price)| *price).collect();
         prices.sort_by(|a, b| a.partial_cmp(b).unwrap());
 
-        let mut total_discount = 0.0;
+        let mut receipt: Vec<f32> = Vec::new();
 
-        // لكل 3 عناصر نأخذ الأرخص مجانًا
         for group in prices.chunks(3) {
             if group.len() == 3 {
-                total_discount += group.iter().cloned().fold(f32::INFINITY, f32::min);
+                let cheapest = group.iter().cloned().fold(f32::INFINITY, f32::min);
+                let total: f32 = group.iter().sum();
+                let discount_ratio = cheapest / total;
+
+                // نخفض كل عنصر من هذه المجموعة بنفس النسبة
+                for price in group {
+                    let discounted_price = price * (1.0 - discount_ratio);
+                    let rounded = (discounted_price * 100.0).round() / 100.0;
+                    receipt.push(rounded);
+                }
+            } else {
+                // العناصر المتبقية (أقل من 3)، لا ينطبق عليها خصم
+                for price in group {
+                    let rounded = (price * 100.0).round() / 100.0;
+                    receipt.push(rounded);
+                }
             }
         }
-
-        // الآن نحسب النسبة المئوية التي سيتم تخفيضها من كل عنصر
-        let total_price: f32 = prices.iter().sum();
-        let discount_percent = total_discount / total_price;
-
-        // نخفض كل عنصر بنسبة الخصم
-        let mut receipt: Vec<f32> = prices
-            .iter()
-            .map(|price| {
-                let discounted_price = price * (1.0 - discount_percent);
-                (discounted_price * 100.0).round() / 100.0 // نحتفظ برقمين عشريين
-            })
-            .collect();
 
         receipt.sort_by(|a, b| a.partial_cmp(b).unwrap());
         self.receipt = receipt.clone();
