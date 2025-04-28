@@ -95,22 +95,20 @@ impl Cart {
         let mut prices: Vec<f32> = self.items.iter().map(|(_, price)| *price).collect();
         prices.sort_by(|a, b| a.partial_cmp(b).unwrap());
 
-        let mut receipt: Vec<f32> = Vec::new();
+        let mut receipt = Vec::new();
 
         for group in prices.chunks(3) {
             if group.len() == 3 {
                 let cheapest = group.iter().cloned().fold(f32::INFINITY, f32::min);
-                let total: f32 = group.iter().sum();
-                let discount_ratio = cheapest / total;
+                let reduction_per_item = cheapest / 3.0;
 
-                // نخفض كل عنصر من هذه المجموعة بنفس النسبة
                 for price in group {
-                    let discounted_price = price * (1.0 - discount_ratio);
-                    let rounded = (discounted_price * 100.0).round() / 100.0;
+                    let new_price = price - reduction_per_item;
+                    let rounded = (new_price * 100.0).round() / 100.0;
                     receipt.push(rounded);
                 }
             } else {
-                // العناصر المتبقية (أقل من 3)، لا ينطبق عليها خصم
+                // أقل من 3 عناصر، بدون خصم
                 for price in group {
                     let rounded = (price * 100.0).round() / 100.0;
                     receipt.push(rounded);
