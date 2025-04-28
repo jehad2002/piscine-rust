@@ -99,16 +99,16 @@ impl Cart {
 
         for group in prices.chunks(3) {
             if group.len() == 3 {
-                let cheapest = group.iter().cloned().fold(f32::INFINITY, f32::min);
-                let reduction_per_item = cheapest / 3.0;
+                let sum: f32 = group.iter().sum();
+                let cheapest = *group.iter().min_by(|a, b| a.partial_cmp(b).unwrap()).unwrap();
+                let discount_ratio = (sum - cheapest) / sum;
 
                 for price in group {
-                    let new_price = price - reduction_per_item;
+                    let new_price = price * discount_ratio;
                     let rounded = (new_price * 100.0).round() / 100.0;
                     receipt.push(rounded);
                 }
             } else {
-                // أقل من 3 عناصر، بدون خصم
                 for price in group {
                     let rounded = (price * 100.0).round() / 100.0;
                     receipt.push(rounded);
