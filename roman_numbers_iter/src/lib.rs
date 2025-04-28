@@ -24,7 +24,7 @@ impl From<u32> for RomanDigit {
             100 => RomanDigit::C,
             500 => RomanDigit::D,
             1000 => RomanDigit::M,
-            _ => RomanDigit::Nulla, // نرجع Nulla كحالة افتراضية
+            _ => RomanDigit::Nulla,
         }
     }
 }
@@ -33,7 +33,7 @@ impl From<u32> for RomanNumber {
     fn from(mut num: u32) -> Self {
         let mut result = RomanNumber(Vec::new());
         if num == 0 {
-            result.0.push(RomanDigit::Nulla);
+            result.0.push(RomanDigit::from(0));
             return result;
         }
         while num > 0 {
@@ -79,7 +79,7 @@ impl From<u32> for RomanNumber {
                 result.0.push(RomanDigit::I);
                 result.0.push(RomanDigit::V);
                 num -= 4;
-            } else {
+            } else if num >= 1 {
                 result.0.push(RomanDigit::I);
                 num -= 1;
             }
@@ -88,27 +88,23 @@ impl From<u32> for RomanNumber {
     }
 }
 
-fn digit_value(d: RomanDigit) -> u32 {
-    match d {
-        RomanDigit::Nulla => 0,
-        RomanDigit::I => 1,
-        RomanDigit::V => 5,
-        RomanDigit::X => 10,
-        RomanDigit::L => 50,
-        RomanDigit::C => 100,
-        RomanDigit::D => 500,
-        RomanDigit::M => 1000,
-    }
-}
-
 impl From<RomanNumber> for u32 {
     fn from(num: RomanNumber) -> Self {
         let mut result = 0;
         let mut prev_value = 0;
-        for digit in num.0.iter().rev() {
-            let value = digit_value(*digit);
-            if value < prev_value {
-                result -= value;
+        for digit in num.0 {
+            let value = match digit {
+                RomanDigit::Nulla => 0,
+                RomanDigit::I => 1,
+                RomanDigit::V => 5,
+                RomanDigit::X => 10,
+                RomanDigit::L => 50,
+                RomanDigit::C => 100,
+                RomanDigit::D => 500,
+                RomanDigit::M => 1000,
+            };
+            if value > prev_value {
+                result += value - 2 * prev_value; // Subtraction case (IV, IX, etc.)
             } else {
                 result += value;
             }
@@ -122,12 +118,12 @@ impl Iterator for RomanNumber {
     type Item = RomanNumber;
 
     fn next(&mut self) -> Option<Self::Item> {
-        let value: u32 = self.clone().into();
-        if value == 0 {
-            return None;
+        let next_value = u32::from(self.clone()) + 1;
+        if next_value > 3999 {
+            None
+        } else {
+            Some(RomanNumber::from(next_value))
         }
-        let next_value = value + 1;
-        Some(RomanNumber::from(next_value))
     }
 }
 
@@ -136,40 +132,36 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_roman_digit_from_u32() {
-        assert_eq!(RomanDigit::from(1), RomanDigit::I);
-        assert_eq!(RomanDigit::from(5), RomanDigit::V);
-        assert_eq!(RomanDigit::from(100), RomanDigit::C);
-        assert_eq!(RomanDigit::from(9999), RomanDigit::Nulla);
+    fn test_u32_to_roman() {
+        assert_eq!(RomanNumber::from(1), RomanNumber(vec![RomanDigit::I]));
+        assert_eq!(RomanNumber::from(4), RomanNumber(vec![RomanDigit::I, RomanDigit::V]));
+        assert_eq!(RomanNumber::from(9), RomanNumber(vec![RomanDigit::I, RomanDigit::X]));
+        assert_eq!(RomanNumber::from(58), RomanNumber(vec![RomanDigit::L, RomanDigit::V, RomanDigit::I, RomanDigit::I, RomanDigit::I]));
+        assert_eq!(RomanNumber::from(1994), RomanNumber(vec![RomanDigit::M, RomanDigit::C, RomanDigit::M, RomanDigit::X, RomanDigit::C, RomanDigit::I, RomanDigit::V]));
     }
 
     #[test]
-    fn test_from_u32_to_roman_number() {
-        let num = RomanNumber::from(1987);
-        let expected = RomanNumber(vec![
-            RomanDigit::M,
-            RomanDigit::C,
-            RomanDigit::M,
-            RomanDigit::X,
-            RomanDigit::L,
-            RomanDigit::X,
-            RomanDigit::V,
-            RomanDigit::I,
-            RomanDigit::I,
-        ]);
-        assert_eq!(num, expected);
+    fn test_roman_to_u32() {
+        assert_eq!(u32::from(RomanNumber(vec![RomanDigit::I])), 1);
+        assert_eq!(u32::from(RomanNumber(vec![RomanDigit::I, RomanDigit::V])), 4);
+        assert_eq!(u32::from(RomanNumber(vec![RomanDigit::I, RomanDigit::X])), 9);
+        assert_eq!(u32::from(RomanNumber(vec![RomanDigit::L, RomanDigit::V, RomanDigit::I, RomanDigit::I, RomanDigit::I])), 58);
+        assert_eq!(u32::from(RomanNumber(vec![RomanDigit::M, RomanDigit::C, RomanDigit::M, RomanDigit::X, RomanDigit::C, RomanDigit::I, RomanDigit::V])), 1994);
     }
 
     #[test]
-    fn test_from_roman_number_to_u32() {
-        let rn = RomanNumber(vec![RomanDigit::M, RomanDigit::D, RomanDigit::C, RomanDigit::C, RomanDigit::X, RomanDigit::L, RomanDigit::I, RomanDigit::V]);
-        assert_eq!(u32::from(rn), 1444);
-    }
-
-    #[test]
-    fn test_iterator() {
-        let mut rn = RomanNumber::from(1);
-        assert_eq!(rn.next(), Some(RomanNumber::from(2)));
-        assert_eq!(rn.next(), Some(RomanNumber::from(3)));
+    fn test_iterator_next() {
+        let mut roman = RomanNumber::from(1);
+        let next1 = roman.next().unwrap();
+        let next2 = roman.next().unwrap();
+        let next3 = roman.next().unwrap();
+        
+        assert_eq!(u32::from(next1.clone()), 2);
+        assert_eq!(u32::from(next2.clone()), 3);
+        assert_eq!(u32::from(next3.clone()), 4);
+        
+        assert_eq!(next1, RomanNumber::from(2));
+        assert_eq!(next2, RomanNumber::from(3));
+        assert_eq!(next3, RomanNumber::from(4));
     }
 }
